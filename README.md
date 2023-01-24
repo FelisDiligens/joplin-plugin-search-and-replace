@@ -5,7 +5,7 @@
         </td>
     </tr>
     <tr>
-        <td rowspan="6" align="center">
+        <td width="225px" rowspan="6" align="center">
             <img src="./assets/joplin.svg" width="64"><br>
             <p>
                 <strong>Joplin Plugin</strong><br>
