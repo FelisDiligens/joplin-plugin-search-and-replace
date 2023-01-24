@@ -47,7 +47,7 @@
 
 Once this plugin is installed, you can press `Ctrl`+`H` in the Markdown editor or click on `Edit` → `Search and replace`.
 
-## 📸 Screenshots
+## 📸 Screenshot
 ![](assets/screenshot.png)
 
 ## ⚙️ Installation
@@ -67,8 +67,6 @@ Once this plugin is installed, you can press `Ctrl`+`H` in the Markdown editor o
 - Select the downloaded *.jpl file
 - Restart Joplin
 - Enjoy
-
-### Hotkeys
 
 ## Development
 
