@@ -68,6 +68,18 @@ Once this plugin is installed, you can press `Ctrl`+`H` in the Markdown editor o
 - Restart Joplin
 - Enjoy
 
+## ⚡ Usage
+
+Open a note in the Markdown editor. Click on `Edit` in the menu bar and then on `Search and replace`. This will open a dialog.
+
+If you click on "Replace next", it will replace the next occurence relative to your I-beam (or cursor). When you open the dialog again (e.g. with `Ctrl`+`H`), it will remember the last text you entered, which makes it easy to repeat the last replacement.
+
+If you click on "Replace all", it will replace all occurences in the note.
+
+You can check "Case insensitive", so it doesn't check for upper or lower case characters.
+
+You can also enable "Regular Expressions". This will interpret the search pattern as a regex. See [MDN docs](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions) and [Wikipedia](https://en.wikipedia.org/wiki/Regular_expression).
+
 ## Development
 
 <details>
