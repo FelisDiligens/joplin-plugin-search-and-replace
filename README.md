@@ -78,7 +78,17 @@ If you click on "Replace all", it will replace all occurences in the note.
 
 You can check "Case insensitive", so it doesn't check for upper or lower case characters.
 
-You can also enable "Regular Expressions". This will interpret the search pattern as a regex. See [MDN docs](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions) and [Wikipedia](https://en.wikipedia.org/wiki/Regular_expression).
+### Regular Expressions
+
+You can also enable "Regular Expressions". This will interpret the search pattern as a regex. See [MDN docs](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions) and [Wikipedia](https://en.wikipedia.org/wiki/Regular_expression)
+
+What should work with regex (but needs testing) is using groups, e.g. like this:  
+Search: `(foo)([a-z]+)`  
+Replace: `$1 bar $2`  
+
+Before: `foobaz`  
+After: `foo bar baz`
+
 
 ## Development
 
