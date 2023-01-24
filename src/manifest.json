@@ -1,0 +1,13 @@
+{
+	"manifest_version": 1,
+	"id": "joplin-plugin-search-and-replace",
+	"app_min_version": "2.8",
+	"version": "1.0.0",
+	"name": "Search & Replace",
+	"description": "Adds a simple search and replace dialog.",
+	"author": "FelisDiligens",
+	"homepage_url": "https://github.com/FelisDiligens/joplin-plugin-search-and-replace",
+	"repository_url": "https://github.com/FelisDiligens/joplin-plugin-search-and-replace",
+	"keywords": [],
+	"categories": []
+}
