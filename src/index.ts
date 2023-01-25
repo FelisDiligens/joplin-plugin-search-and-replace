@@ -90,9 +90,12 @@ joplin.plugins.register({
 		await joplin.contentScripts.onMessage("SearchAndReplace", async (message: any) => {
             switch (message.name) {
                 case "openDialog":
+                    // Get selected text:
+                    let selectedText = await joplin.commands.execute('selectedText');
+
 					// "Recall" last form data:
 					dialogSearchAndReplace.useTemplate({
-						"pattern": sanitizeHTML(dialogLastFormData.pattern),
+						"pattern": selectedText.length > 0 ? sanitizeHTML(selectedText) : sanitizeHTML(dialogLastFormData.pattern),
 						"replacement": sanitizeHTML(dialogLastFormData.replacement),
 						"useregex": dialogLastFormData.useregex == "on" ? "checked" : "",
 						"caseinsensitive": dialogLastFormData.caseinsensitive == "on" ? "checked" : ""
