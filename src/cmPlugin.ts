@@ -1,5 +1,5 @@
 import { Editor, Position } from 'codemirror';
-import { Range, escapeRegex } from './utils';
+import { Range, escapeRegExp, escapeReplacement } from './utils';
 
 module.exports = {
     default: function(context) {
@@ -58,6 +58,7 @@ module.exports = {
                         regexFlags += "i";
 
                     let regexPattern;
+                    let preparedReplacement = replacement;
                     if (useRegex) {
                         try {
                             regexPattern = new RegExp(pattern, regexFlags);
@@ -71,7 +72,8 @@ module.exports = {
                             return;
                         }
                     } else {
-                        regexPattern = escapeRegex(pattern, regexFlags);
+                        regexPattern = new RegExp(escapeRegExp(pattern), regexFlags);
+                        preparedReplacement = escapeReplacement(replacement);
                     }
                     
 
@@ -98,7 +100,7 @@ module.exports = {
                             return;
                         }
 
-                        content = content.replace(regexPattern, replacement);
+                        content = content.replace(regexPattern, preparedReplacement);
                         cm.setValue(content);
 
                         // Set previous cursor position:
@@ -150,7 +152,7 @@ module.exports = {
                         /*
                          * Search and replace
                          */
-                        content = content.replace(regexPattern, replacement);
+                        content = content.replace(regexPattern, preparedReplacement);
                         cm.replaceRange(content, cursor, lastPos);
                         
                         // Set the selection (what has been replaced):

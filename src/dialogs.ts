@@ -1,5 +1,6 @@
 import joplin from "api";
 import { ButtonSpec, DialogResult } from "api/types";
+import { escapeRegExp, escapeReplacement } from "./utils";
 
 /** Wrapper around Joplin's dialogs API. */
 export class Dialog {
@@ -46,8 +47,8 @@ export class Dialog {
         let html = this.template;
         for (var key of Object.keys(obj)) {
             html = html.replace(
-                new RegExp(`\{${key}\}`, "g"),
-                typeof obj[key] == "string" ? obj[key].replace(/\r?\n/g, "<br>") : obj[key].toString());
+                new RegExp(`\{${escapeRegExp(key)}\}`, "g"),
+                typeof obj[key] == "string" ? escapeReplacement(obj[key]).replace(/\r?\n/g, "<br>") : escapeReplacement(obj[key].toString()));
         }
         return await this.setHtml(html);
     }
