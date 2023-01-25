@@ -1,6 +1,7 @@
 import joplin from 'api';
 import { ContentScriptType, MenuItemLocation } from 'api/types';
 import { Dialog } from './dialogs';
+import { sanitizeHTML } from './utils';
 
 let dialogAlert;
 let dialogSearchAndReplace;
@@ -91,8 +92,8 @@ joplin.plugins.register({
                 case "openDialog":
 					// "Recall" last form data:
 					dialogSearchAndReplace.useTemplate({
-						"pattern": dialogLastFormData.pattern,
-						"replacement": dialogLastFormData.replacement,
+						"pattern": sanitizeHTML(dialogLastFormData.pattern),
+						"replacement": sanitizeHTML(dialogLastFormData.replacement),
 						"useregex": dialogLastFormData.useregex == "on" ? "checked" : "",
 						"caseinsensitive": dialogLastFormData.caseinsensitive == "on" ? "checked" : ""
 					});
@@ -106,7 +107,7 @@ joplin.plugins.register({
 					return result;
 				case "alert":
 					dialogAlert.useTemplate({
-						"text": message.text,
+						"text": sanitizeHTML(message.text),
 						"title": message.title
 					});
 					await dialogAlert.open();

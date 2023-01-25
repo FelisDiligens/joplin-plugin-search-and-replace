@@ -1,24 +1,5 @@
 import { Editor, Position } from 'codemirror';
-import { Range } from './cmUtils';
-
-/**
- * Creates a RegExp instance with the given parameters, but escapes `searchValue` first, in order to match the string **exactly**.
- */
-function escapeRegex(searchValue: string, flags: string = ""): RegExp {
-    // Source: https://stackoverflow.com/a/20759804
-    return new RegExp(searchValue.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), flags);
-}
-
-/*
-function stringReplace(str: string, searchValue: string, replaceValue: string, caseInsensitive: boolean = false, allOccurences: boolean = false): string {
-    let flags = "";
-    if (allOccurences)
-        flags += "g";
-    if (caseInsensitive)
-        flags += "i";
-    return str.replace(escapeRegex(searchValue, flags), replaceValue);
-}
-*/
+import { Range, escapeRegex } from './utils';
 
 module.exports = {
     default: function(context) {
