@@ -78,9 +78,10 @@ module.exports = {
                     
 
                     // Get editor and cursor:
-                    let cm: Editor = this;
-                    let cursor = cm.getCursor();
-                    let lastPos = {line: cm.lastLine(), ch: cm.getLine(cm.lastLine()).length};
+                    let cm:       Editor   = this;
+                    let cursor:   Position = cm.getCursor();
+                    let firstPos: Position = {line: 0, ch: 0};
+                    let lastPos:  Position = {line: cm.lastLine(), ch: cm.getLine(cm.lastLine()).length};
 
                     /*
                      * Search and replace:
@@ -88,6 +89,7 @@ module.exports = {
 
                     // "Replace all"
                     if (replaceAll) {
+                        // let content = cm.getRange(firstPos, lastPos);
                         let content = cm.getValue();
 
                         // Nothing found?
@@ -101,7 +103,10 @@ module.exports = {
                         }
 
                         content = content.replace(regexPattern, preparedReplacement);
-                        cm.setValue(content);
+
+                        // Using replaceRange, because otherwise the Markdown viewer does not get updated:
+                        // cm.setValue(content);
+                        cm.replaceRange(content, firstPos, lastPos);
 
                         // Set previous cursor position:
                         cm.setCursor(cursor);
