@@ -14,7 +14,7 @@
         </td>
     </tr>
     <tr>
-        <td colspan="2"><strong>Adds a simple search and replace dialog.</strong></td>
+        <td colspan="2"><strong>Adds a simple search and replace panel.</strong></td>
     </tr>
     <tr>
         <td colspan="2">
@@ -50,6 +50,8 @@
 
 Once this plugin is installed, you can press `Ctrl`+`H` in the Markdown editor or click on `Edit` → `Search and replace`.
 
+> **Note** The dialog has been replaced with a panel in v2.0.0
+
 ## 📸 Screenshot
 ![](assets/screenshot.png)
 
@@ -73,13 +75,12 @@ Once this plugin is installed, you can press `Ctrl`+`H` in the Markdown editor o
 
 ## ⚡ Usage
 
-Open a note in the Markdown editor. Click on `Edit` in the menu bar and then on `Search and replace`. This will open a dialog.
+Open a note in the Markdown editor. Click on `Edit` in the menu bar and then on `Search and replace`. This will open a panel on the right.
 
-If you click on "Replace next", it will replace the next occurence relative to your I-beam (or cursor). When you open the dialog again (e.g. with `Ctrl`+`H`), it will remember the last text you entered, which makes it easy to repeat the last replacement.
-
+If you click on "Replace next", it will replace the next occurence relative to your I-beam (or cursor).  
 If you click on "Replace all", it will replace all occurences in the note.
 
-You can check "Case insensitive", so it doesn't check for upper or lower case characters.
+You can uncheck "Match case", so it doesn't check for upper or lower case characters.
 
 ### Regular Expressions
 
