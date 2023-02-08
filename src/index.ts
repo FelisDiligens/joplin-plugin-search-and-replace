@@ -1,69 +1,120 @@
-import joplin from 'api';
-import { ContentScriptType, MenuItemLocation } from 'api/types';
-import { Dialog } from './dialogs';
-import { sanitizeHTML } from './utils';
+import joplin from "api";
+import { ContentScriptType, MenuItemLocation } from "api/types";
+import { Dialog } from "./dialogs";
+import { Panel } from "./panels";
+import { sanitizeHTML } from "./utils";
 
-let dialogAlert;
-let dialogSearchAndReplace;
-let dialogLastFormData;
+let dialogAlert: Dialog;
+let panel: Panel;
+let selectedText: string = "";
 
 joplin.plugins.register({
-	onStart: async function() {
-		/*
-			Create "Search & replace" dialog
-		*/
-		dialogSearchAndReplace = new Dialog();
-		await dialogSearchAndReplace.create();
-        await dialogSearchAndReplace.setButtons([
-			{id: "replaceNext", title: "Replace next"},
-			{id: "replaceAll", title: "Replace all"},
-			{id: "cancel"}
-		]);
-		dialogSearchAndReplace.addPositiveIds("replaceNext", "replaceAll");
-		dialogSearchAndReplace.template = `
-            <div>
-                <h3>Search and replace</h3>
-                <form>
-                    <table>
-                        <tr>
-                            <td>Search:</td>
-                            <td><input class="expand" type="text" name="pattern" value="{pattern}" placeholder="Search pattern..."></td>
-                        </tr>
-                        <tr>
-                            <td>Replace:</td>
-                            <td><input class="expand" type="text" name="replacement" value="{replacement}" placeholder="Replacement text..."></td>
-                        </tr>
-                        <tr>
-                            <td colspan="2">
-                                <input type="checkbox" id="useregex" name="useregex" {useregex}><label for="useregex">Use Regular Expression</label>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="2">
-                                <input type="checkbox" id="caseinsensitive" name="caseinsensitive" {caseinsensitive}><label for="caseinsensitive">Case insensitive</label>
-                            </td>
-                        </tr>
-                    </table>
-                </form>
-				<p class="small-text">
-					If you enable regular expressions, it's going to use JavaScript regex. See MDN docs to learn more.
-				</p>
-            </div>
-        `;
-		dialogSearchAndReplace.setDefaultFormData({
-            "pattern": "",
-            "replacement": "",
-            "useregex": "off",
-            "caseinsensitive": "off"
-        });
-        dialogLastFormData = dialogSearchAndReplace.getDefaultFormData();
+    onStart: async function () {
+        /*
+            Create 'Search and Replace' panel
+        */
+        panel = new Panel();
+        panel.addScript("./webview_panel.css");
+        panel.addScript("./webview_panel.js");
+        panel.setHtml(`
+        <div>
+            <a href="#" id="close-btn"><i class="fas fa-times"></i> Close</a>
+            <h3>Search and replace</h3>
+            <table>
+                <tr>
+                    <td><input type="text" id="pattern-txt" placeholder="Find"></td>
+                    <td>
+                        <button id="findprevious-btn" title="Previous"><i class="fas fa-chevron-up"></i></button> <!-- fa-arrow-up fa-chevron-circle-up -->
+                        <button id="findnext-btn" title="Next"><i class="fas fa-chevron-down"></i></button> <!-- fa-arrow-down fa-chevron-circle-down -->
+                    </td>
+                </tr>
+                <tr>
+                    <td><input type="text" id="replacement-txt" placeholder="Replace"></td>
+                    <td>
+                        <button id="replace-btn" title="Replace">
+                            <!-- Icon source: https://uxwing.com/find-and-replace-icon/ -->
+                            <svg style="width: 16px; display: inline-block" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 122.88 113.02">
+                                <path fill="white" d="M25.16,45A39.86,39.86,0,0,0,40.38,71.5a39.18,39.18,0,0,0,5.12,3.35,21,21,0,0,0,3.61-5,17.87,17.87,0,0,0,1-2.56,30.92,30.92,0,1,1,26.2,1.1,38.76,38.76,0,0,1,1.57,9.11,39.8,39.8,0,0,0,12.73-7.35l23,17.8,9.25-13.22L100.49,57.5A39.89,39.89,0,1,0,25.16,45ZM0,113V78.1H15.14a18.3,18.3,0,0,1,6.72,1.08,8.83,8.83,0,0,1,4.1,3,7.77,7.77,0,0,1,1.39,4.62A7.31,7.31,0,0,1,24.14,93a9,9,0,0,1-3.54,1.48v.34A8.92,8.92,0,0,1,24.7,96a7.86,7.86,0,0,1,2.93,2.88,8.3,8.3,0,0,1,1.08,4.3,9,9,0,0,1-1.48,5.1A10,10,0,0,1,23,111.74,15.23,15.23,0,0,1,16.44,113Zm9.48-7.57h4.44a5.87,5.87,0,0,0,3.57-.89,3.1,3.1,0,0,0,1.2-2.65,3.71,3.71,0,0,0-.56-2.08,3.57,3.57,0,0,0-1.6-1.3,6.15,6.15,0,0,0-2.48-.44H9.48v7.36Zm0-13.23h3.89a5.8,5.8,0,0,0,2.2-.39,3.37,3.37,0,0,0,1.49-1.13,3,3,0,0,0,.54-1.82,2.9,2.9,0,0,0-1.16-2.48,4.74,4.74,0,0,0-2.93-.87h-4v6.69ZM61.19,40.49h6.49L64.56,30.13h-.25L61.19,40.49Zm8.42,6.38H59.26l-1.81,6h-9.2l10.36-31.4H70.26l10.36,31.4H71.43l-1.82-6Zm-32,62.64-.41-30,7.58,7.44C56.06,79.36,61.28,69.7,59.65,56.87c13.93,15.63,11.11,32.87.2,44.93l7.73,7.6-30,.11Z"/>
+                            </svg>
+                        </button>
+                        <button id="replaceall-btn" title="Replace all">
+                            <!-- Icon source: https://uxwing.com/find-and-replace-icon/ -->
+                            <svg style="width: 16px; display: inline-block" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 122.88 113.02">
+                                <path fill="white" d="M25.16,45A39.86,39.86,0,0,0,40.38,71.5a39.18,39.18,0,0,0,5.12,3.35,21,21,0,0,0,3.61-5,17.87,17.87,0,0,0,1-2.56,30.92,30.92,0,1,1,26.2,1.1,38.76,38.76,0,0,1,1.57,9.11,39.8,39.8,0,0,0,12.73-7.35l23,17.8,9.25-13.22L100.49,57.5A39.89,39.89,0,1,0,25.16,45ZM0,113V78.1H15.14a18.3,18.3,0,0,1,6.72,1.08,8.83,8.83,0,0,1,4.1,3,7.77,7.77,0,0,1,1.39,4.62A7.31,7.31,0,0,1,24.14,93a9,9,0,0,1-3.54,1.48v.34A8.92,8.92,0,0,1,24.7,96a7.86,7.86,0,0,1,2.93,2.88,8.3,8.3,0,0,1,1.08,4.3,9,9,0,0,1-1.48,5.1A10,10,0,0,1,23,111.74,15.23,15.23,0,0,1,16.44,113Zm9.48-7.57h4.44a5.87,5.87,0,0,0,3.57-.89,3.1,3.1,0,0,0,1.2-2.65,3.71,3.71,0,0,0-.56-2.08,3.57,3.57,0,0,0-1.6-1.3,6.15,6.15,0,0,0-2.48-.44H9.48v7.36Zm0-13.23h3.89a5.8,5.8,0,0,0,2.2-.39,3.37,3.37,0,0,0,1.49-1.13,3,3,0,0,0,.54-1.82,2.9,2.9,0,0,0-1.16-2.48,4.74,4.74,0,0,0-2.93-.87h-4v6.69ZM61.19,40.49h6.49L64.56,30.13h-.25L61.19,40.49Zm8.42,6.38H59.26l-1.81,6h-9.2l10.36-31.4H70.26l10.36,31.4H71.43l-1.82-6Zm-32,62.64-.41-30,7.58,7.44C56.06,79.36,61.28,69.7,59.65,56.87c13.93,15.63,11.11,32.87.2,44.93l7.73,7.6-30,.11Z"/>
+                            </svg>
+                            (all)
+                        </button>
+                    </td>
+                </tr>
+            </table>
+            <table>
+                <!--
+                    TODO:
+                    - Match whole words only
+                    - Use Wildcards (alternative to more complex regex)
+                    - Preserve case (when replacing)
+                -->
+                <tr>
+                    <td>Options:</td>
+                    <td>
+                        <input type="checkbox" id="wrap-chk"><label for="wrap-chk">Wrap around<sup>1</sup></label><br>
+                        <input type="checkbox" id="matchcase-chk" checked><label for="matchcase-chk">Match case</label>
+                    </td>
+                    <td>
+                        <input type="radio" id="useliteralsearch-rad" name="matchoptions" checked><label for="useliteralsearch-rad" checked>Literal search</label><br>
+                        <!--<input type="radio" id="usewildcards-rad" name="matchoptions"><label for="usewildcards-rad">Use Wildcards<sup>2</sup></label><br>-->
+                        <input type="radio" id="useregex-rad" name="matchoptions"><label for="useregex-rad">Use Regular Expression<sup>3</sup></label>
+                    </td>
+                </tr>
+            </table>
+            <br>
+            <details>
+                <summary>Show help</summary>
+                <table style="margin-top: 15px;">
+                    <tr>
+                        <td><sup>1</sup></td>
+                        <td>When you reach the end of the note, it will wrap around to the beginning of the note (and vice versa).</td>
+                    </tr>
+                    <tr>
+                        <td><sup>2</sup></td>
+                        <td>With wildcards enabled, you can search using <code>?</code> (any <b>one</b> character) and <code>*</code> (any <b>multiple</b> characters). Escape them like so: <code>\\*</code>, <code>\\?</code></td>
+                    </tr>
+                    <tr>
+                        <td><sup>3</sup></td>
+                        <td>If you enable regular expressions, it's going to use JavaScript's regex. You can also use groups in the replacement text using <code>$1</code>, <code>$2</code>, and so on. Tip: Use regex101.com</td>
+                    </tr>
+                </table>
+            </details>
+        </div>
+        `);
 
-		/*
+        /*
+            React to messages that are sent from the panel:
+        */
+        panel.onMessage(function (message) {
+            if (message.name == "SARPanel.close") {
+                panel.hide();
+            } else if (message.name == "selectedText") {
+                // Return selected text that we saved previously, when opening the panel:
+                return selectedText;
+            } else if (message.name.startsWith("SARPlugin.")) {
+                // Send any "SARPlugin..." messages directly to the CodeMirror editor plugin:
+                joplin.commands.execute('editor.execCommand', {
+					name: message.name,
+					args: [message.form],
+				});
+            } else {
+                // Unknown message, show message box:
+                alert(JSON.stringify(message, null, 4));
+            }
+        });
+
+        /*
 			Create alert dialog
 		*/
-		dialogAlert = new Dialog();
+        dialogAlert = new Dialog();
         await dialogAlert.create();
-        await dialogAlert.setButtons([{id: "ok"}]);
+        await dialogAlert.setButtons([{ id: "ok" }]);
         dialogAlert.template = `
             <div>
                 <h3>{title}</h3>
@@ -71,62 +122,63 @@ joplin.plugins.register({
             </div>
         `;
 
-		/*
-			Register command
+        /*
+			Register command: "Edit -> Search and Replace (Ctrl+H)"
 		*/
-		await joplin.commands.register({
+        await joplin.commands.register({
             name: "searchAndReplace",
             label: "Search and replace",
-            enabledCondition: 'markdownEditorPaneVisible && !richTextEditorVisible',
+            enabledCondition:
+                "markdownEditorPaneVisible && !richTextEditorVisible",
             execute: async () => {
-				await joplin.commands.execute('editor.execCommand', { name: "searchAndReplace", });
-			}
+                // Save 'selectedText' for later:
+                selectedText = await joplin.commands.execute("selectedText");
+
+                // Open panel:
+                panel.show();
+
+                // Set the text in the panel to the selectedText:
+                if (selectedText.length > 0) {
+                    panel.postMessage({ name: "SARPanel.setText", value: selectedText });
+                }
+            },
         });
-		joplin.views.menuItems.create("Search and replace", "searchAndReplace", MenuItemLocation.Edit, { accelerator: "CmdOrCtrl+H" });
 
-		/*
-			Register message
+        // Add command to 'Edit' menu:
+        joplin.views.menuItems.create(
+            "Search and replace",
+            "searchAndReplace",
+            MenuItemLocation.Edit,
+            { accelerator: "CmdOrCtrl+H" }
+        );
+
+        /*
+            React to messages that are sent from the CodeMirror plugin:
 		*/
-		await joplin.contentScripts.onMessage("SearchAndReplace", async (message: any) => {
-            switch (message.name) {
-                case "openDialog":
-                    // Get selected text:
-                    let selectedText = await joplin.commands.execute('selectedText');
-
-					// "Recall" last form data:
-					dialogSearchAndReplace.useTemplate({
-						"pattern": selectedText.length > 0 ? sanitizeHTML(selectedText) : sanitizeHTML(dialogLastFormData.pattern),
-						"replacement": sanitizeHTML(dialogLastFormData.replacement),
-						"useregex": dialogLastFormData.useregex == "on" ? "checked" : "",
-						"caseinsensitive": dialogLastFormData.caseinsensitive == "on" ? "checked" : ""
-					});
-
-					await dialogSearchAndReplace.open();
-					let result = dialogSearchAndReplace.getPreparedDialogResult();
-					
-					// "Memorize" form data:
-					dialogLastFormData = result.formData;
-
-					return result;
-				case "alert":
-					dialogAlert.useTemplate({
-						"text": sanitizeHTML(message.text),
-						"title": message.title
-					});
-					await dialogAlert.open();
-					return dialogAlert.getPreparedDialogResult();
-                default:
-                    return "Error: " + message + " is not a valid message";
+        await joplin.contentScripts.onMessage(
+            "SearchAndReplace",
+            async (message: any) => {
+                switch (message.name) {
+                    case "alert":
+                        dialogAlert.useTemplate({
+                            text: sanitizeHTML(message.text),
+                            title: message.title,
+                        });
+                        await dialogAlert.open();
+                        return dialogAlert.getPreparedDialogResult();
+                    default:
+                        return "Error: " + message + " is not a valid message";
+                }
             }
-        });
+        );
 
-		/*
-			Register CodeMirror script
+        /*
+			Register CodeMirror content script (or plugin):
 		*/
-		await joplin.contentScripts.register(
+        await joplin.contentScripts.register(
             ContentScriptType.CodeMirrorPlugin,
             "SearchAndReplace",
-            './cmPlugin.js'
+            "./cmPlugin.js"
         );
-	},
+    },
 });

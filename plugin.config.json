@@ -2,6 +2,7 @@
 	"extraScripts": [
 		"cmPlugin.ts",
 		"utils.ts",
-		"dialogs.ts"
+		"dialogs.ts",
+		"panels.ts"
 	]
 }

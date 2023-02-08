@@ -11,17 +11,6 @@ export class Dialog {
     private positiveIds: string[];
     public template: string;
 
-    private makeid(length) {
-        // https://stackoverflow.com/a/1349426
-        var result           = '';
-        var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        var charactersLength = characters.length;
-        for ( var i = 0; i < length; i++ ) {
-            result += characters.charAt(Math.floor(Math.random() * charactersLength));
-        }
-        return result;
-    }
-
     constructor() {
         this.id = this.makeid(32);
         this.defaultFormData = {};
@@ -109,5 +98,16 @@ export class Dialog {
 
     public getAnswer(): boolean {
         return this.positiveIds.includes(this.getPressedButton());
+    }
+
+    private makeid(length) {
+        // https://stackoverflow.com/a/1349426
+        var result           = '';
+        var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        var charactersLength = characters.length;
+        for ( var i = 0; i < length; i++ ) {
+            result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+        return result;
     }
 }
