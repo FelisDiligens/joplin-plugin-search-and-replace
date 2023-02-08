@@ -51,8 +51,8 @@ joplin.plugins.register({
                 <!--
                     TODO:
                     - Match whole words only
-                    - Use Wildcards (alternative to more complex regex)
                     - Preserve case (when replacing)
+                    - Find in selection
                 -->
                 <tr>
                     <td>Options:</td>
@@ -62,7 +62,7 @@ joplin.plugins.register({
                     </td>
                     <td>
                         <input type="radio" id="useliteralsearch-rad" name="matchoptions" checked><label for="useliteralsearch-rad" checked>Literal search</label><br>
-                        <!--<input type="radio" id="usewildcards-rad" name="matchoptions"><label for="usewildcards-rad">Use Wildcards<sup>2</sup></label><br>-->
+                        <input type="radio" id="usewildcards-rad" name="matchoptions"><label for="usewildcards-rad">Use Wildcards<sup>2</sup></label><br>
                         <input type="radio" id="useregex-rad" name="matchoptions"><label for="useregex-rad">Use Regular Expression<sup>3</sup></label>
                     </td>
                 </tr>
@@ -77,7 +77,7 @@ joplin.plugins.register({
                     </tr>
                     <tr>
                         <td><sup>2</sup></td>
-                        <td>With wildcards enabled, you can search using <code>?</code> (any <b>one</b> character) and <code>*</code> (any <b>multiple</b> characters). Escape them like so: <code>\\*</code>, <code>\\?</code></td>
+                        <td>With wildcards enabled, you can search using <code>?</code> (any <b>one</b> character) and <code>*</code> (any characters, zero or more). Escape them like so: <code>\\*</code>, <code>\\?</code></td>
                     </tr>
                     <tr>
                         <td><sup>3</sup></td>

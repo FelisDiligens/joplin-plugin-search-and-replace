@@ -19,6 +19,7 @@ let wrapAroundChk = document.querySelector("#wrap-chk");
 let matchCaseChk = document.querySelector("#matchcase-chk");
 
 let useLiteralSearchRad = document.querySelector("#useliteralsearch-rad");
+let useWildcardsRad = document.querySelector("#usewildcards-rad");
 let useRegexRad = document.querySelector("#useregex-rad");
 
 webviewApi.onMessage(function (message) {
@@ -35,6 +36,8 @@ webviewApi.onMessage(function (message) {
 
 function getForm() {
     let matchMethod = "literal";
+    if (useWildcardsRad.checked)
+        matchMethod = "wildcards";
     if (useRegexRad.checked)
         matchMethod = "regex";
     return {

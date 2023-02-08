@@ -1,5 +1,5 @@
 import { Editor, Position } from 'codemirror';
-import { Range, escapeRegExp, escapeReplacement } from './utils';
+import { Range, escapeRegExp, escapeReplacement, wildCardToRegExp } from './utils';
 
 async function alert(context, title, text) {
     return await context.postMessage({
@@ -20,6 +20,8 @@ function prepareRegex(searchPattern: string, options): RegExp {
         case "regex":
         case "regexp":
             return new RegExp(searchPattern, regexFlags);
+        case "wildcards":
+            return new RegExp(wildCardToRegExp(searchPattern, false), regexFlags);
         case "literal":
         default:
             return new RegExp(escapeRegExp(searchPattern), regexFlags);
@@ -31,6 +33,7 @@ function prepareReplacement(replacement: string, options): string {
         case "regex":
         case "regexp":
             return replacement;
+        case "wildcards":
         case "literal":
         default:
             return escapeReplacement(replacement);
@@ -55,7 +58,7 @@ function lastLineAndCh(cm: Editor) {
 }
 
 function getSelectedRange(cm: Editor): Range {
-    // https://stackoverflow.com/questions/11390826/get-selected-range-in-codemirror
+    // Source: https://stackoverflow.com/questions/11390826/get-selected-range-in-codemirror
     return { from: cm.getCursor("from"), to: cm.getCursor("to") };
 }
 
