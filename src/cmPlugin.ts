@@ -132,7 +132,7 @@ function findNext(context, cm: Editor, form, replace: boolean) {
     cm.focus();
 }
 
-function findPrevious(context, cm: Editor, form, replace: boolean) {
+function findPrevious(context, cm: Editor, form) {
     if (!validate(context, form))
         return;
 
@@ -171,15 +171,6 @@ function findPrevious(context, cm: Editor, form, replace: boolean) {
     if (!match) {
         alert(context, "No more occurences found", `"${form.searchPattern}" couldn't be found.`);
         return;
-    }
-
-    // Replace the matched text:
-    if (replace) {
-        if (form.options.preserveCase)
-            content = replacePreserveCase(content, regex, prepareReplacement(form.replacement, form.options));
-        else
-            content = content.replace(regex, prepareReplacement(form.replacement, form.options));
-        cm.replaceRange(content, contentStart, contentEnd);
     }
 
     // Select the text that has been found:
@@ -224,7 +215,7 @@ module.exports = {
             });
 
             CodeMirror.defineExtension('SARPlugin.findPrevious', async function(form) {
-                findPrevious(context, this as Editor, form, false);
+                findPrevious(context, this as Editor, form);
             });
 
             CodeMirror.defineExtension('SARPlugin.replace', async function(form) {
