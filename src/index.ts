@@ -20,6 +20,7 @@ joplin.plugins.register({
         <div>
             <a href="#" id="close-btn"><i class="fas fa-times"></i> Close</a>
             <h3>Search and replace</h3>
+            <p id="warning-mdeditor">Please return to the markdown editor.</p>
             <table>
                 <tr>
                     <td><input type="text" id="pattern-txt" placeholder="Find"></td>
@@ -91,15 +92,25 @@ joplin.plugins.register({
         /*
             React to messages that are sent from the panel:
         */
-        panel.onMessage(function (message) {
+        panel.onMessage(async (message) => {
             if (message.name == "SARPanel.close") {
                 panel.hide();
             } else if (message.name == "selectedText") {
                 // Return selected text that we saved previously, when opening the panel:
                 return selectedText;
+                // return await joplin.commands.execute("selectedText");
+            } else if (message.name == "getEditorState") {
+                // Source: https://github.com/cqroot/joplin-outline/blob/be8f1642676e529b970aca4692157565e4dc860a/src/index.ts#L29
+                const editorCodeView = await joplin.settings.globalValue('editor.codeView');
+                const noteVisiblePanes = await joplin.settings.globalValue('noteVisiblePanes');
+                return {
+                    "markdownEditor": editorCodeView && noteVisiblePanes.includes('editor'),
+                    "WYSIWYGEditor": !editorCodeView,
+                    "viewer": editorCodeView && noteVisiblePanes.includes('viewer')
+                }
             } else if (message.name.startsWith("SARPlugin.")) {
                 // Send any "SARPlugin..." messages directly to the CodeMirror editor plugin:
-                joplin.commands.execute('editor.execCommand', {
+                return await joplin.commands.execute('editor.execCommand', {
 					name: message.name,
 					args: [message.form],
 				});

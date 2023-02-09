@@ -10,6 +10,12 @@ let findPreviousBtn = document.querySelector("#findprevious-btn");
 let findNextBtn = document.querySelector("#findnext-btn");
 let replaceBtn = document.querySelector("#replace-btn");
 let replaceAllBtn = document.querySelector("#replaceall-btn");
+let sarButtons = [
+    findPreviousBtn,
+    findNextBtn,
+    replaceBtn,
+    replaceAllBtn
+];
 
 // Elements:
 let searchTxt = document.querySelector("#pattern-txt");
@@ -21,6 +27,10 @@ let matchCaseChk = document.querySelector("#matchcase-chk");
 let useLiteralSearchRad = document.querySelector("#useliteralsearch-rad");
 let useWildcardsRad = document.querySelector("#usewildcards-rad");
 let useRegexRad = document.querySelector("#useregex-rad");
+
+// Text:
+let warnMdEditorParagraph = document.querySelector("#warning-mdeditor");
+warnMdEditorParagraph.style.display = 'none';
 
 webviewApi.onMessage(function (message) {
     // Message for some reason is: { "message": <actual-message> } ??
@@ -83,6 +93,22 @@ function replaceAll() {
     });
 }
 
+/** Periodically check, if the markdown editor is visible and show a warning, if it isn't. */
+function checkEditor() {
+    webviewApi.postMessage({ name: "getEditorState" }).then((response) => {
+        if (response.markdownEditor) {
+            warnMdEditorParagraph.style.display = 'none';
+            for (let btn of sarButtons)
+                btn.disabled = false;
+        } else {
+            warnMdEditorParagraph.style.display = 'block';
+            for (let btn of sarButtons)
+                btn.disabled = true;
+        }
+    });
+    setTimeout(checkEditor, 1000);
+}
+
 // Attach event handler:
 closeBtn.addEventListener("click", closePanel);
 findNextBtn.addEventListener("click", findNext);
@@ -95,3 +121,5 @@ webviewApi.postMessage({ name: "selectedText" }).then((response) => {
     if (response && response.length > 0)
         searchTxt.value = response;
 });
+
+checkEditor();

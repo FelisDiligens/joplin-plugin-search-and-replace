@@ -37,6 +37,11 @@ button:hover, summary:hover {
     background-color: var(--joplin-raised-background-color);
 }
 
+button:disabled,
+button[disabled] {
+  opacity: 0.5;
+}
+
 td {
     vertical-align: top;
 }
@@ -76,4 +81,8 @@ i, svg {
     display: inline-block;
     font-size: 16px;
     opacity: 1;
+}
+
+#warning-mdeditor {
+    color: red;
 }
