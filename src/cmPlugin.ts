@@ -215,6 +215,31 @@ function findPrevious(context, cm: Editor, form, replace: boolean) {
 module.exports = {
     default: function(context) {
         const plugin = function(CodeMirror) {
+            CodeMirror.defineExtension('CM.getCursor', async function() {
+                let cm: Editor = this;
+                return {
+                    head: cm.getCursor(),
+                    from: cm.getCursor("from"),
+                    to: cm.getCursor("to")
+                }
+            });
+
+            CodeMirror.defineExtension('CM.setCursor', async function(cursor) {
+                let cm: Editor = this;
+
+                // Set cursor or selection:
+                if (cursor.from && cursor.to) // (cursor.from.line != cursor.to.line || cursor.from.ch != cursor.to.ch)
+                    cm.setSelection(cursor.from, cursor.to);
+                else if (cursor.head)
+                    cm.setCursor(cursor.head);
+                else if (cursor.line && cursor.ch)
+                    cm.setCursor(cursor);
+
+                // Needed for the cursor to be visible:
+                cm.refresh();
+                cm.focus();
+            });
+
             CodeMirror.defineExtension('SARPlugin.findNext', async function(form) {
                 findNext(context, this as Editor, form, false);
             });
@@ -229,6 +254,9 @@ module.exports = {
             });
 
             CodeMirror.defineExtension('SARPlugin.replaceAll', async function(form) {
+                if (!validate(context, form))
+                    return;
+
                 // Get editor and cursor:
                 let cm:       Editor   = this;
                 let cursor:   Position = cm.getCursor();
@@ -261,6 +289,10 @@ module.exports = {
 
                 // Set previous cursor position:
                 cm.setCursor(cursor);
+
+                // Needed for the cursor to be visible:
+                cm.refresh();
+                cm.focus();
             });
         }
 

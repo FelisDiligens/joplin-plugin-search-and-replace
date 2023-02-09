@@ -145,13 +145,24 @@ joplin.plugins.register({
                 // Save 'selectedText' for later:
                 selectedText = await joplin.commands.execute("selectedText");
 
+                // Save cursor position:
+                // let cursor = joplin.commands.execute('editor.execCommand', {
+				// 	name: "CM.getCursor",
+				// });
+
                 // Open panel:
-                panel.show();
+                await panel.show();
 
                 // Set the text in the panel to the selectedText:
                 if (selectedText.length > 0) {
                     panel.postMessage({ name: "SARPanel.setText", value: selectedText });
                 }
+
+                // Restore cursor position:
+                // joplin.commands.execute('editor.execCommand', {
+				// 	name: "CM.setCursor",
+                //     args: [cursor]
+				// });
             },
         });
 
