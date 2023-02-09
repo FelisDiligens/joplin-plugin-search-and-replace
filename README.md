@@ -62,6 +62,9 @@ Once this plugin is installed, you can press `Ctrl`+`H` in the Markdown editor o
 ## 📸 Screenshot
 ![](assets/screenshot.png)
 > Panel
+> 
+![](assets/demo.gif)
+> Demo
 
 ## ✨ Features
 

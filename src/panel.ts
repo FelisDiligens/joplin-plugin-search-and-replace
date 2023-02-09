@@ -42,7 +42,7 @@ export async function getPanelHTML() {
             -->
             <tr>
                 <td>Regex<sup>4</sup>:</td>
-                <td>
+                <td colspan="2">
                     <code>
                         <span id="regex-preview"></span>
                     </code>
