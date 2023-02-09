@@ -1,6 +1,10 @@
 import { Editor, Position } from 'codemirror';
 import { Range, escapeRegExp, escapeReplacement, wildCardToRegExp } from './utils/utils';
 
+// require() works but import statement only returns undefined for some reason...
+// import replace from 'preserve-case';   // Doesn't work.
+const replacePreserveCase: Function = require("preserve-case"); // Works.
+
 async function alert(context, title, text) {
     return await context.postMessage({
         name: "alert",
@@ -152,7 +156,10 @@ function findNext(context, cm: Editor, form, replace: boolean) {
 
     // Replace the matched text:
     if (replace) {
-        content = content.replace(regex, prepareReplacement(form.replacement, form.options));
+        if (form.options.preserveCase)
+            content = replacePreserveCase(content, regex, prepareReplacement(form.replacement, form.options));
+        else
+            content = content.replace(regex, prepareReplacement(form.replacement, form.options));
         cm.replaceRange(content, contentStart, contentEnd);
     }
 
@@ -208,7 +215,10 @@ function findPrevious(context, cm: Editor, form, replace: boolean) {
 
     // Replace the matched text:
     if (replace) {
-        content = content.replace(regex, prepareReplacement(form.replacement, form.options));
+        if (form.options.preserveCase)
+            content = replacePreserveCase(content, regex, prepareReplacement(form.replacement, form.options));
+        else
+            content = content.replace(regex, prepareReplacement(form.replacement, form.options));
         cm.replaceRange(content, contentStart, contentEnd);
     }
 
@@ -290,7 +300,10 @@ module.exports = {
                 }
 
                 // Replace all matches:
-                content = content.replace(regex, prepareReplacement(form.replacement, form.options));
+                if (form.options.preserveCase)
+                    content = replacePreserveCase(content, regex, prepareReplacement(form.replacement, form.options));
+                else
+                    content = content.replace(regex, prepareReplacement(form.replacement, form.options));
 
                 // Using replaceRange, because otherwise the Markdown viewer does not get updated:
                 // cm.setValue(content);

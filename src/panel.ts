@@ -38,7 +38,6 @@ export async function getPanelHTML() {
         <table>
             <!--
                 TODO:
-                - Preserve case (when replacing)
                 - Find in selection
             -->
             <tr>
@@ -46,7 +45,8 @@ export async function getPanelHTML() {
                 <td>
                     <input type="checkbox" id="wrap-chk"><label for="wrap-chk">Wrap around<sup>1</sup></label><br>
                     <input type="checkbox" id="matchcase-chk" checked><label for="matchcase-chk">Match case</label><br>
-                    <input type="checkbox" id="matchwholeword-chk"><label for="matchwholeword-chk">Match whole words only</label>
+                    <input type="checkbox" id="matchwholeword-chk"><label for="matchwholeword-chk">Match whole words only</label><br>
+                    <input type="checkbox" id="preservecase-chk"><label for="preservecase-chk">Preserve case</label>
                 </td>
                 <td>
                     <input type="radio" id="useliteralsearch-rad" name="matchoptions" checked><label for="useliteralsearch-rad" checked>Literal search</label><br>

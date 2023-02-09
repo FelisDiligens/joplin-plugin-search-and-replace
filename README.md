@@ -36,7 +36,8 @@
     <tr>
         <td>Built with:</td>
         <td>
-            <a href="https://github.com/laurent22/joplin/tree/dev/packages/generator-joplin">generator-joplin</a>
+            <a href="https://github.com/laurent22/joplin/tree/dev/packages/generator-joplin">generator-joplin</a>,
+            <a href="https://github.com/jedwards1211/preserve-case">preserve-case</a> (which is based on <a href="https://github.com/nbubna/Case">Case</a>)
         </td>
     </tr>
     <tr>
