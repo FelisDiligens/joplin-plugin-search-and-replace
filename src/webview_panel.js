@@ -26,6 +26,7 @@ let useWildcardsRad = document.querySelector("#usewildcards-rad");
 let useRegexRad = document.querySelector("#useregex-rad");
 
 // Text:
+let helpDetails = document.querySelector("details");
 let warnMdEditorParagraph = document.querySelector("#warning-mdeditor");
 warnMdEditorParagraph.style.display = "none";
 let regexPreviewSpan = document.querySelector("#regex-preview");
@@ -108,7 +109,13 @@ function updatePreviewRegex() {
     webviewApi
         .postMessage({ name: "getPreviewRegex", form: getForm() })
         .then((response) => {
-            regexPreviewSpan.innerText = response.toString();
+            if (response.regex) {
+                regexPreviewSpan.innerText = response.regex.toString();
+                regexPreviewSpan.style.color = "";
+            } else if (response.error) {
+                regexPreviewSpan.innerText = response.error.message;
+                regexPreviewSpan.style.color = "red";
+            }
         });
 }
 
@@ -125,6 +132,17 @@ matchWholeWordChk.addEventListener("change", updatePreviewRegex);
 useLiteralSearchRad.addEventListener("change", updatePreviewRegex);
 useWildcardsRad.addEventListener("change", updatePreviewRegex);
 useRegexRad.addEventListener("change", updatePreviewRegex);
+
+// Hide numbers if the help isn't displayed:
+document.querySelectorAll("sup").forEach((el) => {
+    el.style.visibility = "hidden";
+});
+helpDetails.addEventListener("toggle", () => {
+    let isDetailsOpen = helpDetails.hasAttribute("open");
+    document.querySelectorAll("sup").forEach((el) => {
+        el.style.visibility = isDetailsOpen ? "visible" : "hidden";
+    });
+});
 
 // Get selected text upon opening the panel:
 webviewApi.postMessage({ name: "selectedText" }).then((response) => {

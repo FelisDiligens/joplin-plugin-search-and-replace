@@ -33,7 +33,17 @@ joplin.plugins.register({
             } else if (message.name == "getEditorState") {
                 return getEditorState();
             } else if (message.name == "getPreviewRegex") {
-                return prepareRegex(message.form.searchPattern, message.form.options);
+                try {
+                    return {
+                        "regex": prepareRegex(message.form.searchPattern, message.form.options),
+                        "error": null
+                    }
+                } catch (exp) {
+                    return {
+                        "regex": null,
+                        "error": exp
+                    }
+                }
             } else if (message.name.startsWith("SARPlugin.")) {
                 // Send any "SARPlugin..." messages directly to the CodeMirror editor plugin:
                 return await joplin.commands.execute('editor.execCommand', {

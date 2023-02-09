@@ -36,18 +36,20 @@ export async function getPanelHTML() {
             </tr>
         </table>
         <table>
-            <!--
-                TODO:
-                - Find in selection
-            -->
             <tr>
-                <td>Regex<sup>4</sup>:</td>
-                <td colspan="2">
+                <td style="vertical-align: top;">Regex:<sup>4</sup></td>
+                <td colspan="2" style="vertical-align: bottom;">
                     <code>
                         <span id="regex-preview"></span>
                     </code>
                 </td>
             </tr>
+        </table>
+        <table>
+            <!--
+                TODO:
+                - Find in selection
+            -->
             <tr>
                 <td>Options:</td>
                 <td>

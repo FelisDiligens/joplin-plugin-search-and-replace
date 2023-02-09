@@ -43,7 +43,8 @@
     <tr>
         <td>Inspired by:</td>
         <td>
-            <a href="https://github.com/cqroot/joplin-outline">Joplin Outline Plugin</a>
+            <a href="https://github.com/cqroot/joplin-outline">Joplin Outline Plugin</a>,
+            <a href="https://code.visualstudio.com/docs/editor/codebasics#_find-and-replace">VSCode's Find and Replace</a>
         </td>
     </tr>
     <tr>
