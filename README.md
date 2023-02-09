@@ -59,7 +59,7 @@ Once this plugin is installed, you can press `Ctrl`+`H` in the Markdown editor o
 
 > **Note** The dialog has been replaced with a panel in v2.0.0
 
-## 📸 Screenshot
+## 📸 Screenshots
 ![](assets/screenshot.png)
 > Panel
 > 
