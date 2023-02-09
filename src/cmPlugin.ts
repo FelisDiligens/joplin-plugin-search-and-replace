@@ -1,5 +1,5 @@
 import { Editor, Position } from 'codemirror';
-import { Range, escapeRegExp, escapeReplacement, wildCardToRegExp } from './utils';
+import { Range, escapeRegExp, escapeReplacement, wildCardToRegExp } from './utils/utils';
 
 async function alert(context, title, text) {
     return await context.postMessage({

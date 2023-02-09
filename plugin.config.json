@@ -1,8 +1,10 @@
 {
 	"extraScripts": [
 		"cmPlugin.ts",
-		"utils.ts",
-		"dialogs.ts",
-		"panels.ts"
+		"panel.ts",
+		"utils/utils.ts",
+		"utils/joplinUtils.ts",
+		"utils/dialogs.ts",
+		"utils/panels.ts"
 	]
 }
