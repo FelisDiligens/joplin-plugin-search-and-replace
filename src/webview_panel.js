@@ -23,6 +23,7 @@ let replaceTxt = document.querySelector("#replacement-txt");
 
 let wrapAroundChk = document.querySelector("#wrap-chk");
 let matchCaseChk = document.querySelector("#matchcase-chk");
+let matchWholeWordChk = document.querySelector("#matchwholeword-chk");
 
 let useLiteralSearchRad = document.querySelector("#useliteralsearch-rad");
 let useWildcardsRad = document.querySelector("#usewildcards-rad");
@@ -56,6 +57,7 @@ function getForm() {
         "options": {
             "wrapAround": wrapAroundChk.checked,
             "matchCase": matchCaseChk.checked,
+            "matchWholeWord": matchWholeWordChk.checked,
             "matchMethod": matchMethod
         }
     }

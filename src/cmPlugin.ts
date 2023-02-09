@@ -16,16 +16,25 @@ function prepareRegex(searchPattern: string, options): RegExp {
     if (!options.matchCase)
         regexFlags += "i";
 
+    let regexStr = searchPattern;
+
     switch (options.matchMethod.trim().toLowerCase()) {
         case "regex":
         case "regexp":
-            return new RegExp(searchPattern, regexFlags);
+            break;
         case "wildcards":
-            return new RegExp(wildCardToRegExp(searchPattern, false), regexFlags);
+            regexStr = wildCardToRegExp(searchPattern, false);
+            break;
         case "literal":
         default:
-            return new RegExp(escapeRegExp(searchPattern), regexFlags);
+            regexStr = escapeRegExp(searchPattern);
+            break;
     }
+
+    if (options.matchWholeWord)
+        regexStr = "\\b" + regexStr + "\\b";
+
+    return new RegExp(regexStr, regexFlags);
 }
 
 function prepareReplacement(replacement: string, options): string {

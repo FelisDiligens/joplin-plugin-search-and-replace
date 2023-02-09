@@ -51,7 +51,6 @@ joplin.plugins.register({
             <table>
                 <!--
                     TODO:
-                    - Match whole words only
                     - Preserve case (when replacing)
                     - Find in selection
                 -->
@@ -59,7 +58,8 @@ joplin.plugins.register({
                     <td>Options:</td>
                     <td>
                         <input type="checkbox" id="wrap-chk"><label for="wrap-chk">Wrap around<sup>1</sup></label><br>
-                        <input type="checkbox" id="matchcase-chk" checked><label for="matchcase-chk">Match case</label>
+                        <input type="checkbox" id="matchcase-chk" checked><label for="matchcase-chk">Match case</label><br>
+                        <input type="checkbox" id="matchwholeword-chk"><label for="matchwholeword-chk">Match whole words only</label>
                     </td>
                     <td>
                         <input type="radio" id="useliteralsearch-rad" name="matchoptions" checked><label for="useliteralsearch-rad" checked>Literal search</label><br>
