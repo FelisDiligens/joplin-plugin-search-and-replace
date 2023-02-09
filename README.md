@@ -14,7 +14,7 @@
         </td>
     </tr>
     <tr>
-        <td colspan="2"><strong>Adds a simple search and replace panel.</strong></td>
+        <td colspan="2"><strong>Adds a search and replace panel.</strong></td>
     </tr>
     <tr>
         <td colspan="2">
@@ -61,6 +61,23 @@ Once this plugin is installed, you can press `Ctrl`+`H` in the Markdown editor o
 
 ## 📸 Screenshot
 ![](assets/screenshot.png)
+> Panel
+
+## ✨ Features
+
+- **Search and/or replace within a note.**
+  - Search for something in a note with more options than the built-in search.
+  - Replace one by one.
+  - Replace all matches in a note.
+- **Search pattern types:**
+  - **Literal:** Search for literally what you entered.
+  - **Wildcards:** Use `?` and `*` to match any character.
+  - **Regular Expressions**
+- **Options:**
+  - **Match case:** When unchecked, ignore whether a letter is upper or lower case.
+  - **Match whole words only:** The entire word has to match the search pattern.
+  - **Preserve case**
+  - **Wrap around:** When you reach the end of the note, it will wrap around to the beginning of the note (and vice versa).
 
 ## ⚙️ Installation
 

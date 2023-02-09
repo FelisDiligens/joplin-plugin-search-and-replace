@@ -10,12 +10,7 @@ let findPreviousBtn = document.querySelector("#findprevious-btn");
 let findNextBtn = document.querySelector("#findnext-btn");
 let replaceBtn = document.querySelector("#replace-btn");
 let replaceAllBtn = document.querySelector("#replaceall-btn");
-let sarButtons = [
-    findPreviousBtn,
-    findNextBtn,
-    replaceBtn,
-    replaceAllBtn
-];
+let sarButtons = [findPreviousBtn, findNextBtn, replaceBtn, replaceAllBtn];
 
 // Elements:
 let searchTxt = document.querySelector("#pattern-txt");
@@ -32,12 +27,12 @@ let useRegexRad = document.querySelector("#useregex-rad");
 
 // Text:
 let warnMdEditorParagraph = document.querySelector("#warning-mdeditor");
-warnMdEditorParagraph.style.display = 'none';
+warnMdEditorParagraph.style.display = "none";
+let regexPreviewSpan = document.querySelector("#regex-preview");
 
 webviewApi.onMessage(function (message) {
     // Message for some reason is: { "message": <actual-message> } ??
-    if (message.message)
-        message = message.message
+    if (message.message) message = message.message;
 
     if (message.name == "SARPanel.setText") {
         searchTxt.value = message.value;
@@ -48,21 +43,19 @@ webviewApi.onMessage(function (message) {
 
 function getForm() {
     let matchMethod = "literal";
-    if (useWildcardsRad.checked)
-        matchMethod = "wildcards";
-    if (useRegexRad.checked)
-        matchMethod = "regex";
+    if (useWildcardsRad.checked) matchMethod = "wildcards";
+    if (useRegexRad.checked) matchMethod = "regex";
     return {
-        "searchPattern": searchTxt.value,
-        "replacement": replaceTxt.value,
-        "options": {
-            "wrapAround": wrapAroundChk.checked,
-            "matchCase": matchCaseChk.checked,
-            "matchWholeWord": matchWholeWordChk.checked,
-            "matchMethod": matchMethod,
-            "preserveCase": preserveCaseChk.checked
-        }
-    }
+        searchPattern: searchTxt.value,
+        replacement: replaceTxt.value,
+        options: {
+            wrapAround: wrapAroundChk.checked,
+            matchCase: matchCaseChk.checked,
+            matchWholeWord: matchWholeWordChk.checked,
+            matchMethod: matchMethod,
+            preserveCase: preserveCaseChk.checked,
+        },
+    };
 }
 
 function closePanel() {
@@ -72,28 +65,28 @@ function closePanel() {
 function findNext() {
     webviewApi.postMessage({
         name: "SARPlugin.findNext",
-        form: getForm()
+        form: getForm(),
     });
 }
 
 function findPrevious() {
     webviewApi.postMessage({
         name: "SARPlugin.findPrevious",
-        form: getForm()
+        form: getForm(),
     });
 }
 
 function replace() {
     webviewApi.postMessage({
         name: "SARPlugin.replace",
-        form: getForm()
+        form: getForm(),
     });
 }
 
 function replaceAll() {
     webviewApi.postMessage({
         name: "SARPlugin.replaceAll",
-        form: getForm()
+        form: getForm(),
     });
 }
 
@@ -101,16 +94,22 @@ function replaceAll() {
 function checkEditor() {
     webviewApi.postMessage({ name: "getEditorState" }).then((response) => {
         if (response.markdownEditor) {
-            warnMdEditorParagraph.style.display = 'none';
-            for (let btn of sarButtons)
-                btn.disabled = false;
+            warnMdEditorParagraph.style.display = "none";
+            for (let btn of sarButtons) btn.disabled = false;
         } else {
-            warnMdEditorParagraph.style.display = 'block';
-            for (let btn of sarButtons)
-                btn.disabled = true;
+            warnMdEditorParagraph.style.display = "block";
+            for (let btn of sarButtons) btn.disabled = true;
         }
     });
     setTimeout(checkEditor, 1000);
+}
+
+function updatePreviewRegex() {
+    webviewApi
+        .postMessage({ name: "getPreviewRegex", form: getForm() })
+        .then((response) => {
+            regexPreviewSpan.innerText = response.toString();
+        });
 }
 
 // Attach event handler:
@@ -120,10 +119,16 @@ findPreviousBtn.addEventListener("click", findPrevious);
 replaceBtn.addEventListener("click", replace);
 replaceAllBtn.addEventListener("click", replaceAll);
 
+searchTxt.addEventListener("input", updatePreviewRegex);
+matchCaseChk.addEventListener("change", updatePreviewRegex);
+matchWholeWordChk.addEventListener("change", updatePreviewRegex);
+useLiteralSearchRad.addEventListener("change", updatePreviewRegex);
+useWildcardsRad.addEventListener("change", updatePreviewRegex);
+useRegexRad.addEventListener("change", updatePreviewRegex);
+
 // Get selected text upon opening the panel:
 webviewApi.postMessage({ name: "selectedText" }).then((response) => {
-    if (response && response.length > 0)
-        searchTxt.value = response;
+    if (response && response.length > 0) searchTxt.value = response;
 });
 
 checkEditor();

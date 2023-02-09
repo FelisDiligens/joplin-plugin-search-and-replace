@@ -41,6 +41,14 @@ export async function getPanelHTML() {
                 - Find in selection
             -->
             <tr>
+                <td>Regex<sup>4</sup>:</td>
+                <td>
+                    <code>
+                        <span id="regex-preview"></span>
+                    </code>
+                </td>
+            </tr>
+            <tr>
                 <td>Options:</td>
                 <td>
                     <input type="checkbox" id="wrap-chk"><label for="wrap-chk">Wrap around<sup>1</sup></label><br>
@@ -70,6 +78,10 @@ export async function getPanelHTML() {
                 <tr>
                     <td><sup>3</sup></td>
                     <td>If you enable regular expressions, it's going to use JavaScript's regex. You can also use groups in the replacement text using <code>$1</code>, <code>$2</code>, and so on. Tip: Use regex101.com</td>
+                </tr>
+                <tr>
+                    <td><sup>4</sup></td>
+                    <td>This plugin internally translates every search pattern to a regular expression. You can preview the used regex.</td>
                 </tr>
             </table>
         </details>

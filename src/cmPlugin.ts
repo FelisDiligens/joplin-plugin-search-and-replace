@@ -1,5 +1,5 @@
 import { Editor, Position } from 'codemirror';
-import { Range, escapeRegExp, escapeReplacement, wildCardToRegExp } from './utils/utils';
+import { Range, escapeRegExp, escapeReplacement, wildCardToRegExp, prepareRegex, prepareReplacement } from './utils/utils';
 
 // require() works but import statement only returns undefined for some reason...
 // import replace from 'preserve-case';   // Doesn't work.
@@ -11,46 +11,6 @@ async function alert(context, title, text) {
         title: title,
         text: text
     });
-}
-
-function prepareRegex(searchPattern: string, options): RegExp {
-    let regexFlags = "";
-    if (options.global)
-        regexFlags += "g";
-    if (!options.matchCase)
-        regexFlags += "i";
-
-    let regexStr = searchPattern;
-
-    switch (options.matchMethod.trim().toLowerCase()) {
-        case "regex":
-        case "regexp":
-            break;
-        case "wildcards":
-            regexStr = wildCardToRegExp(searchPattern, false);
-            break;
-        case "literal":
-        default:
-            regexStr = escapeRegExp(searchPattern);
-            break;
-    }
-
-    if (options.matchWholeWord)
-        regexStr = "\\b" + regexStr + "\\b";
-
-    return new RegExp(regexStr, regexFlags);
-}
-
-function prepareReplacement(replacement: string, options): string {
-    switch (options.matchMethod.trim().toLowerCase()) {
-        case "regex":
-        case "regexp":
-            return replacement;
-        case "wildcards":
-        case "literal":
-        default:
-            return escapeReplacement(replacement);
-    }
 }
 
 function validate(context, form): boolean {

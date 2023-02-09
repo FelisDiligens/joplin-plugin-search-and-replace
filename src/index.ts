@@ -2,9 +2,9 @@ import joplin from "api";
 import { ContentScriptType, MenuItemLocation } from "api/types";
 import { getPanelHTML } from "./panel";
 import { Dialog } from "./utils/dialogs";
-import { getEditorState, getTheme } from "./utils/joplinUtils";
+import { getEditorState } from "./utils/joplinUtils";
 import { Panel } from "./utils/panels";
-import { sanitizeHTML } from "./utils/utils";
+import { prepareRegex, sanitizeHTML } from "./utils/utils";
 
 let dialogAlert: Dialog;
 let panel: Panel;
@@ -32,6 +32,8 @@ joplin.plugins.register({
                 // return await joplin.commands.execute("selectedText");
             } else if (message.name == "getEditorState") {
                 return getEditorState();
+            } else if (message.name == "getPreviewRegex") {
+                return prepareRegex(message.form.searchPattern, message.form.options);
             } else if (message.name.startsWith("SARPlugin.")) {
                 // Send any "SARPlugin..." messages directly to the CodeMirror editor plugin:
                 return await joplin.commands.execute('editor.execCommand', {
