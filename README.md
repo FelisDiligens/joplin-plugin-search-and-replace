@@ -43,8 +43,7 @@
     <tr>
         <td>Inspired by:</td>
         <td>
-            <a href="https://github.com/cqroot/joplin-outline">Joplin Outline Plugin</a>,
-            <a href="https://code.visualstudio.com/docs/editor/codebasics#_find-and-replace">VSCode's Find and Replace</a>
+            <a href="https://github.com/cqroot/joplin-outline">Joplin Outline Plugin</a>
         </td>
     </tr>
     <tr>
@@ -74,8 +73,8 @@ Once this plugin is installed, you can press `Ctrl`+`H` in the Markdown editor o
   - Replace one by one.
   - Replace all matches in a note.
 - **Search pattern types:**
-  - **Literal:** Search for literally what you entered.
-  - **Wildcards:** Use `?` and `*` to match any character.
+  - **Literal**
+  - **Wildcards**
   - **Regular Expressions**
 - **Options:**
   - **Match case:** When unchecked, ignore whether a letter is upper or lower case.
@@ -108,18 +107,32 @@ Open a note in the Markdown editor. Click on `Edit` in the menu bar and then on 
 If you click on "Replace next", it will replace the next occurence relative to your I-beam (or cursor).  
 If you click on "Replace all", it will replace all occurences in the note.
 
-You can uncheck "Match case", so it doesn't check for upper or lower case characters.
+### Wildcards
+
+If you select 'Use Wildcards', it will let write a search pattern with these wildcards:
+- `?`  - any character  (one and only one)  
+- `*`  - any characters (zero or more)  
+- `\?` - a question mark  
+- `\*` - an asterisk
 
 ### Regular Expressions
 
 You can also enable "Regular Expressions". This will interpret the search pattern as a regex. See [MDN docs](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions) and [Wikipedia](https://en.wikipedia.org/wiki/Regular_expression)
 
-What should work with regex (but needs testing) is using groups, e.g. like this:  
+What also works with regex is using groups, e.g. like this:  
 Search: `(foo)([a-z]+)`  
 Replace: `$1 bar $2`  
 
 Before: `foobaz`  
 After: `foo bar baz`
+
+### Preserve case
+
+> **Warning** Preserve case can sometimes behave differently than expected.
+
+This option can be useful if you want to replace certain words in texts or refactor code/tables/etc.
+
+![](assets/demo-preserve-case.gif)
 
 
 ## Development
