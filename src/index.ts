@@ -1,17 +1,24 @@
 import joplin from "api";
 import { ContentScriptType, MenuItemLocation } from "api/types";
+import { getDialogHTML } from "./dialog";
 import { getPanelHTML } from "./panel";
+import { getSettings, registerAllSettings } from "./settings";
 import { Dialog } from "./utils/dialogs";
 import { getEditorState } from "./utils/joplinUtils";
 import { Panel } from "./utils/panels";
 import { prepareRegex, sanitizeHTML } from "./utils/utils";
 
 let dialogAlert: Dialog;
+let dialogSAR: Dialog;
+let dialogSARLastFormData;
 let panel: Panel;
 let selectedText: string = "";
 
 joplin.plugins.register({
     onStart: async function () {
+        // Register this plugin's settings, so the user can access them:
+        await registerAllSettings();
+
         /*
             Create 'Search and Replace' panel
         */
@@ -57,10 +64,38 @@ joplin.plugins.register({
         });
 
         /*
+			Create "Search & replace" dialog
+		*/
+		dialogSAR = new Dialog();
+		await dialogSAR.create();
+        await dialogSAR.addScript("./webview_dialog.css");
+        await dialogSAR.setButtons([
+			{id: "replaceNext", title: "Replace next"},
+			{id: "replaceAll", title: "Replace all"},
+			{id: "cancel"}
+		]);
+		dialogSAR.addPositiveIds("replaceNext", "replaceAll");
+		dialogSAR.template = getDialogHTML();
+        dialogSAR.setDefaultFormData({
+            "pattern-txt": "",
+            "replacement-txt": "",
+            "wrap-chk": "off",
+            "matchcase-chk": "off",
+            "matchwholeword-chk": "off",
+            "preservecase-chk": "off",
+            "matchmethod": "literal"
+        });
+        dialogSARLastFormData = {
+            ...dialogSAR.getDefaultFormData(),
+            "matchcase-chk": "on"
+        };
+
+        /*
 			Create alert dialog
 		*/
         dialogAlert = new Dialog();
         await dialogAlert.create();
+        await dialogAlert.addScript("./webview_dialog.css");
         await dialogAlert.setButtons([{ id: "ok" }]);
         dialogAlert.template = `
             <div>
@@ -81,18 +116,77 @@ joplin.plugins.register({
                 // Save 'selectedText' for later:
                 selectedText = await joplin.commands.execute("selectedText");
 
-                // If panel not visible:
-                let isVisible = await panel.visible();
-                if (!isVisible) {
-                    panel.setHtml(await getPanelHTML());
+                // Get the user preference (panel or dialog)
+                let guiPreference = (await getSettings()).SARGUIPreference;
 
-                    // Open panel:
-                    await panel.show();
-                }
+                /*
+                    Open a panel:
+                */
+                if (guiPreference == "panel") {
+                    // If panel not visible:
+                    let isVisible = await panel.visible();
+                    if (!isVisible) {
+                        panel.setHtml(await getPanelHTML());
 
-                // Set the text in the panel to the selectedText:
-                if (selectedText.length > 0) {
-                    panel.postMessage({ name: "SARPanel.setText", value: selectedText });
+                        // Open panel:
+                        await panel.show();
+                    }
+
+                    // Set the text in the panel to the selectedText:
+                    if (selectedText.length > 0) {
+                        panel.postMessage({ name: "SARPanel.setText", value: selectedText });
+                    }
+
+                /*
+                    Open a dialog:
+                */
+                } else if (guiPreference == "dialog") {
+                    // "Recall" last form data:
+					dialogSAR.useTemplate({
+						"pattern": selectedText.length > 0 ? sanitizeHTML(selectedText) : sanitizeHTML(dialogSARLastFormData["pattern-txt"]),
+						"replacement": sanitizeHTML(dialogSARLastFormData["replacement-txt"]),
+                        "wrap": dialogSARLastFormData["wrap-chk"] == "on" ? "checked" : "",
+                        "matchcase": dialogSARLastFormData["matchcase-chk"] == "on" ? "checked" : "",
+                        "matchwholeword": dialogSARLastFormData["matchwholeword-chk"] == "on" ? "checked" : "",
+                        "preservecase": dialogSARLastFormData["preservecase-chk"] == "on" ? "checked" : "",
+                        "matchmethod-literal": dialogSARLastFormData["matchmethod"] == "literal" ? "checked" : "",
+                        "matchmethod-wildcards": dialogSARLastFormData["matchmethod"] == "wildcards" ? "checked" : "",
+                        "matchmethod-regex": dialogSARLastFormData["matchmethod"] == "regex" ? "checked" : ""
+					});
+
+                    // Open the dialog:
+                    await dialogSAR.open();
+					let result = dialogSAR.getPreparedDialogResult();
+					
+					// "Memorize" form data:
+					dialogSARLastFormData = result.formData;
+
+                    if (result.confirm) {
+                        let form = {
+                            searchPattern: result.formData["pattern-txt"],
+                            replacement: result.formData["replacement-txt"],
+                            options: {
+                                wrapAround: result.formData["wrap-chk"] == "on",
+                                matchCase: result.formData["matchcase-chk"] == "on",
+                                matchWholeWord: result.formData["matchwholeword-chk"] == "on",
+                                matchMethod: result.formData["matchmethod"],
+                                preserveCase: result.formData["preservecase-chk"] == "on"
+                            },
+                        }
+
+                        switch (result.id) {
+                            case "replaceNext":
+                                return await joplin.commands.execute('editor.execCommand', {
+                                    name: "SARPlugin.replace",
+                                    args: [form],
+                                });
+                            case "replaceAll":
+                                return await joplin.commands.execute('editor.execCommand', {
+                                    name: "SARPlugin.replaceAll",
+                                    args: [form],
+                                });
+                        }
+                    }
                 }
             },
         });

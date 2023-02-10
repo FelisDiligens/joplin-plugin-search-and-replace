@@ -35,6 +35,7 @@ export class Panel {
 
     /**
      * Adds (and loads when created) new JS or CSS files into the panel.
+     * @see {@link joplin.views.panels.addScript}
      * @param script 
      */
     public async addScript(script: string) {

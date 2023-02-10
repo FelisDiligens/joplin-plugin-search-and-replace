@@ -59,9 +59,9 @@ export async function getPanelHTML() {
                     <input type="checkbox" id="preservecase-chk"><label for="preservecase-chk">Preserve case</label>
                 </td>
                 <td>
-                    <input type="radio" id="useliteralsearch-rad" name="matchoptions" checked><label for="useliteralsearch-rad" checked>Literal search</label><br>
-                    <input type="radio" id="usewildcards-rad" name="matchoptions"><label for="usewildcards-rad">Use Wildcards<sup>2</sup></label><br>
-                    <input type="radio" id="useregex-rad" name="matchoptions"><label for="useregex-rad">Use Regular Expression<sup>3</sup></label>
+                    <input type="radio" id="useliteralsearch-rad" name="matchmethod" checked><label for="useliteralsearch-rad" checked>Literal search</label><br>
+                    <input type="radio" id="usewildcards-rad" name="matchmethod"><label for="usewildcards-rad">Use Wildcards<sup>2</sup></label><br>
+                    <input type="radio" id="useregex-rad" name="matchmethod"><label for="useregex-rad">Use Regular Expression<sup>3</sup></label>
                 </td>
             </tr>
         </table>
