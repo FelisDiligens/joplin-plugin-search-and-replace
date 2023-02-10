@@ -71,6 +71,9 @@ Once this plugin is installed, you can press `Ctrl`+`H` in the Markdown editor o
 ![](assets/demo.gif)
 > Demo
 
+![](assets/demo-gui-preference.gif)
+> Settings
+
 ## ✨ Features
 
 - **Search and/or replace within a note.**
@@ -86,6 +89,7 @@ Once this plugin is installed, you can press `Ctrl`+`H` in the Markdown editor o
   - **Match whole words only:** The entire word has to match the search pattern.
   - **Preserve case**
   - **Wrap around:** When you reach the end of the note, it will wrap around to the beginning of the note (and vice versa).
+- Pick between a panel or dialog.
 
 ## ⚙️ Installation
 
