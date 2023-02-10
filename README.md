@@ -57,12 +57,17 @@
 
 Once this plugin is installed, you can press `Ctrl`+`H` in the Markdown editor or click on `Edit` → `Search and replace`.
 
-> **Note** The dialog has been replaced with a panel in v2.0.0
+> **Note**  
+> The dialog has been replaced with a panel in v2.0.0  
+> You can pick between the panel and dialog in the settings (see screenshots)
 
 ## 📸 Screenshots
-![](assets/screenshot.png)
+![](assets/screenshot-panel.png)
 > Panel
-> 
+
+![](assets/screenshot-dialog.png)
+> Dialog
+
 ![](assets/demo.gif)
 > Demo
 
