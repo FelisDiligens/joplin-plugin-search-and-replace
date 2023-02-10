@@ -70,11 +70,13 @@ joplin.plugins.register({
 		await dialogSAR.create();
         await dialogSAR.addScript("./webview_dialog.css");
         await dialogSAR.setButtons([
-			{id: "replaceNext", title: "Replace next"},
+			{id: "findPrevious", title: "Find previous"},
+			{id: "findNext", title: "Find next"},
+			{id: "replace", title: "Replace"},
 			{id: "replaceAll", title: "Replace all"},
 			{id: "cancel"}
 		]);
-		dialogSAR.addPositiveIds("replaceNext", "replaceAll");
+		dialogSAR.addPositiveIds("findNext", "findPrevious", "replace", "replaceAll");
 		dialogSAR.template = getDialogHTML();
         dialogSAR.setDefaultFormData({
             "pattern-txt": "",
@@ -174,18 +176,10 @@ joplin.plugins.register({
                             },
                         }
 
-                        switch (result.id) {
-                            case "replaceNext":
-                                return await joplin.commands.execute('editor.execCommand', {
-                                    name: "SARPlugin.replace",
-                                    args: [form],
-                                });
-                            case "replaceAll":
-                                return await joplin.commands.execute('editor.execCommand', {
-                                    name: "SARPlugin.replaceAll",
-                                    args: [form],
-                                });
-                        }
+                        await joplin.commands.execute('editor.execCommand', {
+                            name: "SARPlugin." + result.id,
+                            args: [form],
+                        });
                     }
                 }
             },
