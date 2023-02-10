@@ -137,7 +137,7 @@ function findPrevious(context, cm: Editor, form) {
         return;
 
     // Get editor and cursor:
-    let cursor:   Position = replace ? cm.getCursor("to") : cm.getCursor("from");
+    let cursor:   Position = cm.getCursor("from");
     let firstPos: Position = firstLineAndCh();
     let lastPos:  Position = lastLineAndCh(cm);
 
@@ -174,7 +174,7 @@ function findPrevious(context, cm: Editor, form) {
     }
 
     // Select the text that has been found:
-    let newSelection = getMatchRange(content, match.index, replace ? form.replacement.length : match.length, contentStart);
+    let newSelection = getMatchRange(content, match.index, match.length, contentStart);
     cm.setSelection(newSelection.from, newSelection.to);
 
     // Needed for the cursor to be visible:
