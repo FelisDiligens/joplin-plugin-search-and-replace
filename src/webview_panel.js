@@ -20,6 +20,7 @@ let wrapAroundChk = document.querySelector("#wrap-chk");
 let matchCaseChk = document.querySelector("#matchcase-chk");
 let matchWholeWordChk = document.querySelector("#matchwholeword-chk");
 let preserveCaseChk = document.querySelector("#preservecase-chk");
+let multiLineChk = document.querySelector("#multiline-chk");
 
 let useLiteralSearchRad = document.querySelector("#useliteralsearch-rad");
 let useWildcardsRad = document.querySelector("#usewildcards-rad");
@@ -55,6 +56,7 @@ function getForm() {
             matchWholeWord: matchWholeWordChk.checked,
             matchMethod: matchMethod,
             preserveCase: preserveCaseChk.checked,
+            multiLine: multiLineChk.checked
         },
     };
 }
@@ -132,6 +134,7 @@ matchWholeWordChk.addEventListener("change", updatePreviewRegex);
 useLiteralSearchRad.addEventListener("change", updatePreviewRegex);
 useWildcardsRad.addEventListener("change", updatePreviewRegex);
 useRegexRad.addEventListener("change", updatePreviewRegex);
+multiLineChk.addEventListener("change", updatePreviewRegex);
 
 // Hide numbers if the help isn't displayed:
 document.querySelectorAll("sup").forEach((el) => {

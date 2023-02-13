@@ -18,7 +18,8 @@ export function getDialogHTML() {
                         <input type="checkbox" id="wrap-chk" name="wrap-chk" {wrap}><label for="wrap-chk">Wrap around</label><br>
                         <input type="checkbox" id="matchcase-chk" name="matchcase-chk" {matchcase}><label for="matchcase-chk">Match case</label><br>
                         <input type="checkbox" id="matchwholeword-chk" name="matchwholeword-chk" {matchwholeword}><label for="matchwholeword-chk">Match whole words only</label><br>
-                        <input type="checkbox" id="preservecase-chk" name="preservecase-chk" {preservecase}><label for="preservecase-chk">Preserve case</label>
+                        <input type="checkbox" id="preservecase-chk" name="preservecase-chk" {preservecase}><label for="preservecase-chk">Preserve case</label><br>
+                        <input type="checkbox" id="multiline-chk" name="multiline-chk" {multiline}><label for="multiline-chk">Use 'multi line' flag</label>
                     </td>
                     <td>
                         <input type="radio" id="useliteralsearch-rad" name="matchmethod" value="literal" {matchmethod-literal}><label for="useliteralsearch-rad" checked>Literal search</label><br>

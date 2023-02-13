@@ -43,12 +43,14 @@ export function wildCardToRegExp(value: string, beginToEnd: boolean = true) {
 }
 
 /** Create a RegExp with the given `searchPattern` and `options`. */
-export function prepareRegex(searchPattern: string, options: {global: boolean, matchCase: boolean, matchMethod: "regex" | "wildcards" | "literal", matchWholeWord: boolean}): RegExp {
+export function prepareRegex(searchPattern: string, options: {global: boolean, multiLine: boolean, matchCase: boolean, matchMethod: "regex" | "wildcards" | "literal", matchWholeWord: boolean}): RegExp {
     let regexFlags = "";
     if (options.global)
         regexFlags += "g";
     if (!options.matchCase)
         regexFlags += "i";
+    if (options.multiLine)
+        regexFlags += "m";
 
     let regexStr = searchPattern;
 

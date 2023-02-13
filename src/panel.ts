@@ -56,7 +56,8 @@ export async function getPanelHTML() {
                     <input type="checkbox" id="wrap-chk"><label for="wrap-chk">Wrap around<sup>1</sup></label><br>
                     <input type="checkbox" id="matchcase-chk" checked><label for="matchcase-chk">Match case</label><br>
                     <input type="checkbox" id="matchwholeword-chk"><label for="matchwholeword-chk">Match whole words only</label><br>
-                    <input type="checkbox" id="preservecase-chk"><label for="preservecase-chk">Preserve case</label>
+                    <input type="checkbox" id="preservecase-chk"><label for="preservecase-chk">Preserve case</label><br>
+                    <input type="checkbox" id="multiline-chk" checked><label for="multiline-chk">Use 'multi line' flag</label>
                 </td>
                 <td>
                     <input type="radio" id="useliteralsearch-rad" name="matchmethod" checked><label for="useliteralsearch-rad" checked>Literal search</label><br>

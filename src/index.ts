@@ -85,11 +85,13 @@ joplin.plugins.register({
             "matchcase-chk": "off",
             "matchwholeword-chk": "off",
             "preservecase-chk": "off",
+            "multiline-chk": "off",
             "matchmethod": "literal"
         });
         dialogSARLastFormData = {
             ...dialogSAR.getDefaultFormData(),
-            "matchcase-chk": "on"
+            "matchcase-chk": "on",
+            "multiline-chk": "on"
         };
 
         /*
@@ -151,6 +153,7 @@ joplin.plugins.register({
                         "matchcase": dialogSARLastFormData["matchcase-chk"] == "on" ? "checked" : "",
                         "matchwholeword": dialogSARLastFormData["matchwholeword-chk"] == "on" ? "checked" : "",
                         "preservecase": dialogSARLastFormData["preservecase-chk"] == "on" ? "checked" : "",
+                        "multiline": dialogSARLastFormData["multiline-chk"] == "on" ? "checked" : "",
                         "matchmethod-literal": dialogSARLastFormData["matchmethod"] == "literal" ? "checked" : "",
                         "matchmethod-wildcards": dialogSARLastFormData["matchmethod"] == "wildcards" ? "checked" : "",
                         "matchmethod-regex": dialogSARLastFormData["matchmethod"] == "regex" ? "checked" : ""
@@ -172,7 +175,8 @@ joplin.plugins.register({
                                 matchCase: result.formData["matchcase-chk"] == "on",
                                 matchWholeWord: result.formData["matchwholeword-chk"] == "on",
                                 matchMethod: result.formData["matchmethod"],
-                                preserveCase: result.formData["preservecase-chk"] == "on"
+                                preserveCase: result.formData["preservecase-chk"] == "on",
+                                multiLine: result.formData["multiline-chk"] == "on"
                             },
                         }
 
